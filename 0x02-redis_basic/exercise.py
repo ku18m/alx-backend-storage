@@ -17,6 +17,7 @@ def count_calls(method: Callable) -> Callable:
         return method(self, *args, **kwargs)
     return wrapper
 
+
 class Cache:
     """ Class Cache that handles redis connection and methods """
     def __init__(self) -> None:
