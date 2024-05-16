@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Using redis with python"""
 import redis
-from typing import Union
+from typing import Union, Callable
 from uuid import uuid4
 
 
@@ -17,3 +17,27 @@ class Cache:
         key = str(uuid4())
         self._redis.set(key, data)
         return key
+
+    def get(self, key: str, fn: Callable = None) -> str:
+        """
+        Retrieves the data of the given key
+        and convert it with the given conversion function
+        """
+        data = self._redis.get(key)
+        if fn:
+            return fn(data)
+        return data
+
+    def get_str(self, key: str) -> str:
+        """ Retrieves the data of the given key and decode it """
+        data = self._redis.get(key)
+        return data.decode("utf-8")
+
+    def get_int(self, key: str) -> int:
+        """ Retrieves the data of the given key and convert it to int """
+        data = self._redis.get(key)
+        try:
+            data = int(data)
+        except Exception:
+            data = 0
+        return data
